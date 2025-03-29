@@ -48,15 +48,30 @@ function App() {
         alert("Please install MetaMask!");
         return;
       }
+
+      // Prevent multiple simultaneous connection attempts
+      if (isConnected) {
+        console.log("Wallet already connected");
+        return;
+      }
       
-      // Request account access
-      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-      
-      console.log("Connected:", accounts[0]);
-      setWalletAddress(accounts[0]);
+      // Set a loading state to prevent multiple clicks
       setIsConnected(true);
+      
+      try {
+        // Request account access
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        
+        console.log("Connected:", accounts[0]);
+        setWalletAddress(accounts[0]);
+      } catch (error) {
+        // If connection fails, reset the connection state
+        setIsConnected(false);
+        throw error;
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error connecting to wallet:", error);
+      alert("Failed to connect wallet. Please try again.");
     }
   };
 
