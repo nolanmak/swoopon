@@ -76,6 +76,7 @@ function App() {
               <Dashboard 
                 isConnected={isConnected} 
                 walletAddress={walletAddress} 
+                connectWallet={connectWallet}
               />
             } 
           />
