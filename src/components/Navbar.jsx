@@ -10,7 +10,7 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
-  // Toggle between light and dark mode
+  // Toggle between light and dark modes
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     if (isDarkMode) {
