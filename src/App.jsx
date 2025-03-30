@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
+import LiquidityPool from './pages/lpool';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -96,6 +97,15 @@ function App() {
                 isConnected={isConnected} 
                 walletAddress={walletAddress} 
                 connectWallet={connectWallet}
+              />
+            } 
+          />
+          <Route 
+            path="/liquidity" 
+            element={
+              <LiquidityPool 
+                isConnected={isConnected} 
+                walletAddress={walletAddress}
               />
             } 
           />
