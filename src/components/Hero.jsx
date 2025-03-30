@@ -27,7 +27,7 @@ const Hero = ({ isDarkMode }) => {
       </div>
 
       {/* Content Overlay Section - Positioning on the right but shifted left */}
-      <div className="absolute right-5-percent md:right-15-percent lg:right-15-percent top-0 bottom-0 w-full md:w-2/5 lg:w-1/3 flex items-center justify-center z-10"> 
+      <div className="absolute right-5-percent md:right-15-percent lg:right-15-percent top-0 bottom-0 md:w-2/5 lg:w-1/3 flex items-center justify-center z-10"> 
         <div className="bg-white/30 backdrop-blur-lg dark:bg-black/40 dark:backdrop-blur-xl rounded-xl border border-white/30 p-8 shadow-xl w-full max-w-md mx-4 text-center transition-all duration-300">
           <h2 className="text-2xl font-bold mb-4 text-white">
             Earn Rewards with Swoupon

@@ -1,9 +1,84 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { Line } from 'react-chartjs-2';
+import { useInView } from 'react-intersection-observer';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import Hero from '../components/Hero';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Home = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [chartData, setChartData] = useState({
+    labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    datasets: [
+      {
+        label: 'Swoupon Rewards',
+        data: Array(11).fill(0), // Initialize with zeros for animation
+        borderColor: '#FC72FF',
+        backgroundColor: 'rgba(252, 114, 255, 0.2)',
+        tension: 0.1,
+        fill: true,
+      },
+    ],
+  });
+  
+  const chartRef = useRef(null);
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+    triggerOnce: true,
+  });
+  
+  // Animate chart drawing when scrolled into view
+  useEffect(() => {
+    if (inView && chartRef.current) {
+      const targetData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Data with slope of 1
+      const animationDuration = 1500; // 1.5 seconds
+      const steps = 20;
+      let currentStep = 0;
+      
+      const interval = setInterval(() => {
+        if (currentStep <= steps) {
+          const progress = currentStep / steps;
+          const newData = targetData.map(value => value * progress);
+          
+          setChartData(prevData => ({
+            ...prevData,
+            datasets: [
+              {
+                ...prevData.datasets[0],
+                data: newData,
+              },
+            ],
+          }));
+          
+          currentStep++;
+        } else {
+          clearInterval(interval);
+        }
+      }, animationDuration / steps);
+      
+      return () => clearInterval(interval);
+    }
+  }, [inView]);
   
   // Check if dark mode is active
   useEffect(() => {
@@ -88,6 +163,104 @@ const Home = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="relative py-16 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 items-center px-6">
+            {/* Explanation Side - Left */}
+            <div>
+              <h2 className="text-3xl font-bold mb-6 bg-gradient text-transparent bg-clip-text">Watch Your Rewards Grow</h2>
+              <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
+                The more swaps you make, the more Swoupon you earn. Visualize your rewards growing linearly with each transaction.
+              </p>
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">1</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Each point on the line represents a swap</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">2</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Every swap earns you 1 Swoupon</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">3</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">After 10 swaps, redeem for a free transaction</span>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Chart Side - Right */}
+            <div 
+              ref={ref} 
+              className="w-full bg-white dark:bg-black p-6 rounded-lg shadow-lg"
+            >
+              <Line 
+                ref={chartRef}
+                data={chartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  animation: {
+                    duration: 0 // Disable default animations
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: {
+                        display: true,
+                        text: 'Swoupon Earned',
+                        color: isDarkMode ? '#fff' : '#333',
+                      },
+                      grid: {
+                        color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                      },
+                      ticks: {
+                        color: isDarkMode ? '#fff' : '#333',
+                      }
+                    },
+                    x: {
+                      title: {
+                        display: true,
+                        text: 'Number of Swaps',
+                        color: isDarkMode ? '#fff' : '#333',
+                      },
+                      grid: {
+                        color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                      },
+                      ticks: {
+                        color: isDarkMode ? '#fff' : '#333',
+                      }
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: isDarkMode ? '#fff' : '#333',
+                      }
+                    },
+                    tooltip: {
+                      backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+                      titleColor: isDarkMode ? '#fff' : '#333',
+                      bodyColor: isDarkMode ? '#fff' : '#333',
+                      borderColor: '#FC72FF',
+                      borderWidth: 1,
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative py-16 dark:bg-gray-900">
       </div>
 
       {/* Content Section with floating background tokens */}
@@ -201,20 +374,6 @@ const Home = () => {
               />
             );
           })}
-        </div>
-        
-        {/* Actual content */}
-        <div className="relative z-10">
-          {/* Call to Action */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center mt-8">
-            <h2 className="text-2xl font-bold mb-4 text-uniswap-light-text dark:text-uniswap-dark-text">Ready to explore your crypto assets?</h2>
-            <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary mb-6">
-              Connect your wallet and start exploring your tokens and NFTs today.
-            </p>
-            <Link to="/dashboard" className="btn btn-gradient inline-block px-8 py-3 transition-transform hover:-translate-y-1">
-              Launch App
-            </Link>
-          </div>
         </div>
 
         {/* Add keyframes for animations */}
