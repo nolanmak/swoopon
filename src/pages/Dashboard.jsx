@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Dashboard = ({ isConnected, walletAddress }) => {
+const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
   const [nativeBalance, setNativeBalance] = useState(null);
   const [tokenBalances, setTokenBalances] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,10 @@ const Dashboard = ({ isConnected, walletAddress }) => {
           </div>
           <h2 className="mb-4">Connect Your Wallet</h2>
           <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary mb-6">Please connect your wallet to view your dashboard.</p>
-          <button className="btn btn-gradient mx-auto">
+          <button 
+            className="btn btn-gradient mx-auto"
+            onClick={connectWallet}
+          >
             Connect Wallet
           </button>
         </div>

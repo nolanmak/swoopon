@@ -81,11 +81,7 @@ a:hover {
 /* Layout */
 .container {
   width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  overflow-x: hidden;
 }
 
 /* Components */
@@ -98,6 +94,8 @@ a:hover {
   border: 1px solid var(--border-color);
   transition: all 0.2s ease;
 }
+
+.bg-white\/30 { background-color: rgba(255, 255, 255, 0.3); }
 
 .btn {
   display: inline-block;
@@ -143,37 +141,12 @@ a:hover {
   background-color: var(--bg-color);
 }
 
-/* Navigation */
-.navbar {
-  background-color: var(--card-bg);
-  box-shadow: var(--shadow);
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-.navbar-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.navbar-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(to right, var(--uniswap-pink), var(--uniswap-purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 .navbar-menu {
   display: flex;
   gap: 1.5rem;
 }
 
 .navbar-link {
-  color: var(--text-secondary);
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -378,6 +351,11 @@ a:hover {
   padding-right: 1rem;
 }
 
+.px-12 {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
 .p-4 {
   padding: 1rem;
 }
@@ -385,6 +363,8 @@ a:hover {
 .p-8 {
   padding: 2rem;
 }
+
+.bg-black { background-color: rgba(0, 0, 0); }
 
 /* Grid system */
 .grid {
@@ -395,12 +375,107 @@ a:hover {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.md\:grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .gap-6 {
   gap: 1.5rem;
 }
 
 .gap-8 {
   gap: 2rem;
+}
+
+.gap-12 {
+  gap: 3rem;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+/* Width and sizing */
+.w-6 {
+  width: 1.5rem;
+}
+
+.h-6 {
+  height: 1.5rem;
+}
+
+.w-64 {
+  width: 16rem;
+}
+
+.w-128 {
+  width: 32rem;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+/* Spacing */
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.py-16 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Borders */
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+/* Effects */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Animations */

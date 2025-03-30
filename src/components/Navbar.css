@@ -1,77 +1,128 @@
-.navbar {
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
+/* Navbar overlay - always floating on top */
+.navbar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Extremely high z-index to ensure it's on top */
+  pointer-events: none; /* Allow clicking through by default */
 }
 
 .navbar-container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  width: 100%;
+  pointer-events: auto; /* Re-enable pointer events for the navbar itself */
 }
 
-.navbar-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.navbar-logo:hover {
-  text-decoration: none;
-}
-
-.navbar-menu {
+/* Left side with theme toggle */
+.navbar-left {
   display: flex;
+  align-items: center;
+}
+
+/* Right side with navigation and wallet */
+.navbar-right {
+  display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
+/* Theme toggle button */
+.navbar-theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.navbar-theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* Dark mode specific toggle button */
+.dark .navbar-theme-toggle {
+  background-color: rgba(33, 36, 41, 0.5);
+  border: 1px solid #2C2F36;
+}
+
+/* Navigation links */
 .navbar-link {
-  color: var(--text-color);
-  font-weight: 500;
+  color: #FFFFFF;
   text-decoration: none;
+  font-weight: 500;
   transition: color 0.2s ease;
+  position: relative;
+  padding: 0.5rem 0;
 }
 
 .navbar-link:hover {
-  color: var(--primary-color);
+  color: #FC72FF; /* Uniswap pink */
   text-decoration: none;
 }
 
-.navbar-wallet {
-  display: flex;
-  align-items: center;
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to right, #FC72FF, #9B30FF); /* Uniswap gradient */
+  transition: width 0.3s ease;
 }
 
-.wallet-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.navbar-link:hover::after {
+  width: 100%;
 }
 
-.connect-wallet-btn {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
+/* Wallet button/display */
+.navbar-connect-button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  background: linear-gradient(to right, #FC72FF, #9B30FF); /* Uniswap gradient */
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
 }
 
-.connect-wallet-btn:hover {
-  background-color: #2a75e6;
+.navbar-connect-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(252, 114, 255, 0.5);
+}
+
+.navbar-wallet-connected {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-family: monospace;
+}
+
+/* Dark mode specific wallet display */
+.dark .navbar-wallet-connected {
+  background-color: rgba(33, 36, 41, 0.5);
+  border: 1px solid #2C2F36;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .navbar-container {
-    flex-direction: column;
-    gap: 1rem;
+    padding: 1rem 1.5rem;
   }
   
-  .navbar-menu {
-    margin: 0.5rem 0;
+  .navbar-right {
+    gap: 1rem;
   }
 }

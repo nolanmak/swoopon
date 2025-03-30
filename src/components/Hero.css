@@ -1,0 +1,89 @@
+/* Hero component specific styles */
+
+/* Basic layout */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.min-h-screen { min-height: 100vh; }
+.overflow-hidden { overflow: hidden; }
+
+/* Positioning */
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.right-0 { right: 0; }
+.right-5-percent { right: 5%; }
+.right-10-percent { right: 10%; }
+.right-15-percent { right: 15%; }
+.right-20-percent { right: 20%; }
+.right-30-percent { right: 30%; }
+.right-40-percent { right: 40%; }
+.right-50-percent { right: 50%; }
+.right-60-percent { right: 60%; }
+.right-70-percent { right: 70%; }
+.right-80-percent { right: 80%; }
+.right-90-percent { right: 90%; }
+.top-0 { top: 0; }
+.bottom-0 { bottom: 0; }
+
+/* Z-index */
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+
+/* Flexbox */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+
+/* Width and sizing */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.max-w-md { max-width: 28rem; }
+
+/* Margin and padding */
+.mx-4 { margin-left: 1rem; margin-right: 1rem; }
+.mx-8 { margin-left: 2rem; margin-right: 2rem; }
+.p-8 { padding: 2rem; }
+
+/* Typography */
+.text-center { text-align: center; }
+.text-white { color: white; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.font-bold { font-weight: 700; }
+.text-lg { font-size: 1.125rem; }
+.text-gray-200 { color: #e5e7eb; }
+
+/* Borders */
+.rounded-xl { border-radius: 0.75rem; }
+.border { border-width: 1px; }
+
+/* Effects */
+.shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+.backdrop-blur-lg { backdrop-filter: blur(16px); }
+.bg-white { background-color: rgba(255, 255, 255); }
+.border-white\/30 { border-color: rgba(255, 255, 255, 0.3); }
+
+/* Transitions */
+.transition-opacity { transition-property: opacity; }
+.duration-1000 { transition-duration: 1000ms; }
+.transition-all { transition-property: all; }
+.duration-300 { transition-duration: 300ms; }
+
+/* Image */
+.object-cover { object-fit: cover; }
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+
+/* Dark mode */
+.dark .dark\:bg-black\/40 { background-color: rgba(0, 0, 0, 0.4); }
+.dark .dark\:backdrop-blur-xl { backdrop-filter: blur(24px); }
+.dark .dark\:text-gray-300 { color: #d1d5db; }
+
+/* Responsive */
+@media (min-width: 768px) {
+  .md\:w-2\/5 { width: 40%; }
+  .md\:mx-8 { margin-left: 2rem; margin-right: 2rem; }
+  .md\:mx-12 { margin-left: 3rem; margin-right: 3rem; }
+}
+
+@media (min-width: 1024px) {
+  .lg\:w-1\/3 { width: 33.333333%; }
+}
