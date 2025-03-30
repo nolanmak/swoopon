@@ -381,6 +381,16 @@ a:hover {
   padding-right: 6rem;
 }
 
+.px-36 {
+  padding-left: 9rem;
+  padding-right: 9rem;
+}
+
+.px-48 {
+  padding-left: 12rem;
+  padding-right: 12rem;
+}
+
 .bg-black { background-color: rgba(0, 0, 0); }
 
 /* Grid system */
@@ -511,8 +521,12 @@ a:hover {
   margin-top: 0.5rem;
 }
 
+.mt-8 {
+  margin-top: 2rem;
+}
+
 .mt-12 {
-  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .py-16 {

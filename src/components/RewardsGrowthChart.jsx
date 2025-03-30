@@ -135,47 +135,47 @@ const RewardsGrowthChart = ({ isDarkMode }) => {
         <div className="grid md:grid-cols-2 gap-12 items-center px-12"
           >
           {/* Explanation Side - Left */}
-          <div
-            className="rounded-lg p-8 shadow-lg"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: 'var(--text-color)'
-            }}
+            <div
+              className="rounded-lg p-8 shadow-lg"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: 'var(--text-color)'
+              }}
             >
-            <h2 className="text-3xl font-bold mb-6 bg-gradient text-transparent bg-clip-text">Watch Your Rewards Grow</h2>
-            <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
-              The more swaps you make, the more Swoupon you earn. Visualize your rewards growing linearly with each transaction.
-            </p>
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-start">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
-                  <span className="text-white text-sm">1</span>
-                </div>
-                <span className="text-gray-700 dark:text-gray-300">Each point on the line represents a swap</span>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
-                  <span className="text-white text-sm">2</span>
-                </div>
-                <span className="text-gray-700 dark:text-gray-300">Every swap earns you 1 Swoupon</span>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
-                  <span className="text-white text-sm">3</span>
-                </div>
-                <span className="text-gray-700 dark:text-gray-300">After 10 swaps, redeem for a free transaction</span>
-              </li>
-            </ul>
-            
-            <button 
-              className="btn btn-gradient px-6 py-3 rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              onClick={scrollToTop}
-            >
-              Earn Rewards
-            </button>
-          </div>
+              <h2 className="text-3xl font-bold mb-6 bg-gradient text-transparent bg-clip-text">Maximize Your Swoupon Rewards</h2>
+              <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
+                The more you swap, the greater your rewards. Watch as each transaction boosts your Swoupon balance, saving you on future swaps.
+              </p>
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">1</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Earn Swoupons with every regular swap (paid in fees)</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">2</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Dynamic rewards grow larger with increased swap volume</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">3</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Redeem Swoupons to significantly reduce your future swap fees</span>
+                </li>
+              </ul>
+
+              <button
+                className="btn btn-gradient px-6 py-3 rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                onClick={scrollToTop}
+              >
+                Start Earning
+              </button>
+            </div>
           
           {/* Chart Side - Right */}
           <div 

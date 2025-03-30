@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, Zap, Shield, RefreshCcw } from 'lucide-react';
+import { DollarSign, Zap, Shield, RefreshCcw, Users } from 'lucide-react';
 
 const BenefitsSection = () => {
   // Function to scroll to top of the page
@@ -24,7 +24,7 @@ const BenefitsSection = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-8 bg-gradient text-transparent bg-clip-text">Why swap with us?</h2>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-2xl">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-2xl">
           {/* Dynamic Fees */}
           <div className=" dark:bg-gray-800 p-6 rounded-lg transition-all">
             <div 
@@ -62,48 +62,28 @@ const BenefitsSection = () => {
               Redeem Swoupons for zero-fee transactions
             </p>
           </div>
-          
-          {/* Security */}
-          <div className=" dark:bg-gray-800 p-6 rounded-lg transition-all">
-            <div 
-              className="flex items-center justify-center mb-5 mx-auto bg-gradient"
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
-              }}
-            >
-              <Shield size={20} className="text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-center mb-3 text-gray-800 dark:text-white">Enhanced Security</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-center font-light">
-              Industry-leading security protocols
-            </p>
-          </div>
-          
-          {/* Continuous Improvement */}
-          <div className=" dark:bg-gray-800 p-6 rounded-lg transition-all">
-            <div 
-              className="flex items-center justify-center mb-5 mx-auto bg-gradient"
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
-              }}
-            >
-              <RefreshCcw size={20} className="text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-center mb-3 text-gray-800 dark:text-white">Continuous Updates</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-center font-light">
-              Regular platform improvements
-            </p>
-          </div>
-          
         </div>
+
+        {/* Community Section - Replacing Security */}
+        <div className=" dark:bg-gray-800 p-6 rounded-lg transition-all">
+            <div 
+              className="flex items-center justify-center mb-5 mx-auto bg-gradient"
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+              }}
+            >
+              <Users size={20} className="text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-center mb-3 text-gray-800 dark:text-white">Community Driven</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-center font-light">
+              Governed by an active user community
+            </p>
+          </div>
         
-        <div className="mt-12 text-center">
+        <div className="mt-18 text-center">
           <button 
             className="btn btn-gradient px-6 py-3 rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             onClick={scrollToTop}

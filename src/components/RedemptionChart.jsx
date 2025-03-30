@@ -14,14 +14,14 @@ const RedemptionChart = ({ isDarkMode }) => {
   
   return (
     <div className="relative py-8 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto py-12 px-48">
         <div 
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             color: 'var(--text-color)'
-          }} className="py-12 px-24 flex flex-col items-center rounded-lg p-8 shadow-lg">
+          }} className="flex flex-col items-center rounded-lg p-8 shadow-lg">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-6 bg-gradient text-transparent bg-clip-text">Redeem Your Swoupons</h2>
             </div>
