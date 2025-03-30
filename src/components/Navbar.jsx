@@ -66,9 +66,13 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
   // Class for the mobile menu based on state
   const mobileMenuClasses = `navbar-mobile-menu ${isMenuOpen ? 'open' : ''}`;
 
-  // Define text color style based on current page
+  // Define styles based on current page
   const navLinkStyle = isDashboardPage ? { color: '#000000' } : {};
-  const walletTextStyle = isDashboardPage ? { color: '#000000' } : {};
+  const walletCardStyle = isDashboardPage ? { 
+    color: '#000000',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderColor: 'rgba(0, 0, 0, 0.2)'
+  } : {};
 
   return (
     <nav className="navbar-main">
@@ -109,7 +113,7 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
           <div className="navbar-right">
             
             {isConnected ? (
-              <div className="navbar-wallet-connected" style={walletTextStyle}>
+              <div className="navbar-wallet-connected" style={walletCardStyle}>
                 <span>{truncateAddress(walletAddress)}</span>
               </div>
             ) : (
