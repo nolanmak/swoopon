@@ -34,6 +34,62 @@ const Home = () => {
       {/* Hero Section */}
       <Hero isDarkMode={isDarkMode} />
 
+      {/* Punch Card Concept Section */}
+      <div className="relative py-16 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 items-center px-12">
+            {/* Image Side */}
+            <div className="flex justify-center">
+              <img 
+                src="/punch_card.png" 
+                alt="Liquidity Swap Punch Card" 
+                className="rounded-lg shadow-lg w-128 h-auto"
+              />
+            </div>
+            
+            {/* Text Side */}
+            <div>
+              <h2 className="text-3xl font-bold mb-6 bg-gradient text-transparent bg-clip-text">How Swoupon Works</h2>
+              <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
+                Remember those coffee shop punch cards? Each time you bought a coffee, you'd get a stamp - and after collecting enough stamps, you'd earn a free coffee.
+              </p>
+              <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
+                <strong>Swoupon works similarly for your DeFi swaps:</strong>
+              </p>
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">1</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Make a token swap through our platform</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">2</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Each swap earns you Swoupon automatically</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">3</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Accumulate Swoupon with every transaction you make</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient flex items-center justify-center mr-3 mt-1">
+                    <span className="text-white text-sm">4</span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">Redeem your Swoupon for free swaps</span>
+                </li>
+              </ul>
+              <button className="btn btn-gradient px-6 py-3 mt-2 rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Content Section with floating background tokens */}
       <div className="relative max-w-7xl mx-auto px-4 py-12 z-10 min-h-[600px]">
         {/* Floating tokens background effect */}

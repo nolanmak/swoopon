@@ -6,7 +6,7 @@ const Hero = ({ isDarkMode }) => {
 
   useEffect(() => {
     const img = new Image();
-    img.src = '/ChatGPT_Image.png'; // Corrected path for public folder
+    img.src = '/hero.png'; // Corrected path for public folder
     img.onload = () => setImageLoaded(true);
     img.onerror = () => console.error('Failed to load hero image');
   }, []);
@@ -20,7 +20,7 @@ const Hero = ({ isDarkMode }) => {
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0"> 
         <img
-          src="/ChatGPT_Image.png"
+          src="/hero.png"
           alt="Hero Background"
           className={`w-full h-full object-cover transition-opacity duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
