@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
 import './Hero.css';
+import Swap from './Swap';
 
-const Hero = ({ isDarkMode }) => {
+const Hero = ({ isDarkMode, isConnected, walletAddress, connectWallet }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const img = new Image();
-    img.src = '/hero.png'; // Corrected path for public folder
-    img.onload = () => setImageLoaded(true);
-    img.onerror = () => console.error('Failed to load hero image');
+    img.src = '/hero.png';
+    img.onload = () => {
+      setImageLoaded(true);
+    };
   }, []);
 
-  const handleConnectWallet = () => {
-    console.log('Connect Wallet clicked');
+  const scrollToContent = () => {
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
   };
 
   return (
@@ -27,25 +32,26 @@ const Hero = ({ isDarkMode }) => {
       </div>
 
       {/* Content Overlay Section - Positioning on the right but shifted left */}
-      <div className="absolute right-5-percent md:right-15-percent lg:right-15-percent top-0 bottom-0 md:w-2/5 lg:w-1/3 flex items-center justify-center z-10"> 
-        <div className="bg-white/30 backdrop-blur-lg dark:bg-black/40 dark:backdrop-blur-xl rounded-xl border border-white/30 p-8 shadow-xl w-full max-w-md mx-4 text-center transition-all duration-300">
-          <h2 className="text-2xl font-bold mb-4 text-white">
-            Earn Rewards with Swoupon
-          </h2>
-          <p className="text-lg text-gray-200 dark:text-gray-300 mb-8">
-            Connect your wallet to access decentralized features.
-          </p>
-          <button
-            onClick={handleConnectWallet}
-            className="btn btn-gradient px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 dark:focus:ring-offset-black"
-            style={
-              isDarkMode
-                ? { boxShadow: '0 0 20px rgba(252, 114, 255, 0.6)' }
-                : { boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)' }
-            }
-          >
-            Get Started
-          </button>
+      <div className="absolute right-5 md:right-15 lg:right-15 top-0 bottom-0 md:w-2/5 lg:w-1/3 flex items-center justify-center z-10"> 
+          <Swap 
+            isDarkMode={isDarkMode}
+            walletAddress={walletAddress}
+            isConnected={isConnected}
+            connectWallet={connectWallet}
+          />
+      </div>
+      
+      {/* Scroll Down CTA */}
+      <div className="absolute bottom-10 left-0 right-0 flex justify-center items-center z-10">
+        <div 
+          className="scroll-cta flex items-center gap-3 cursor-pointer" 
+          onClick={scrollToContent}
+        >
+          <span className="text-white mb-1 font-medium">How it works</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
         </div>
       </div>
     </div>

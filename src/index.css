@@ -156,6 +156,14 @@ a:hover {
   text-decoration: none;
 }
 
+.pb-0 {
+  padding-bottom: 0;
+}
+
+.mx-auto {
+  margin: 0 auto;
+}
+
 /* Dashboard */
 .dashboard-page {
   max-width: 1000px;
@@ -457,9 +465,20 @@ a:hover {
   justify-content: center;
 }
 
+.chart-blur {
+
+}
 .chart-info {
   padding: 1rem;
   background-color: var(--card-bg);
+}
+
+.text-ourpink {
+  color: #FC72FF;
+}
+
+.bg-ourpink {
+  background-color: #FC72FF;
 }
 
 /* Spacing */
@@ -469,6 +488,10 @@ a:hover {
 
 .mr-3 {
   margin-right: 0.75rem;
+}
+
+.mt--1 {
+  margin-top: -0.15rem;
 }
 
 .mt-1 {
@@ -554,4 +577,73 @@ a:hover {
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* Gradient styles */
+.bg-gradient {
+  background: linear-gradient(to right, var(--uniswap-pink), var(--uniswap-purple));
+}
+
+.text-transparent {
+  color: transparent;
+}
+
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Add transition for hover effects */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.hover\:shadow-xl:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Utility classes for flex and grid layouts */
+.grid {
+  display: grid;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+/* BenefitsSection styles */
+.BenefitsSection {
+  padding: 2rem;
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.BenefitsSection .benefit {
+  margin-bottom: 1.5rem;
+}
+
+.BenefitsSection .benefit:last-child {
+  margin-bottom: 0;
+}
+
+.BenefitsSection .benefit .icon {
+  margin-right: 1rem;
+}
+
+.BenefitsSection .benefit .description {
+  font-size: 1rem;
+  color: var(--text-secondary);
 }

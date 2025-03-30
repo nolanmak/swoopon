@@ -1,21 +1,32 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
+  const location = useLocation();
   const [nativeBalance, setNativeBalance] = useState(null);
   const [tokenBalances, setTokenBalances] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [swapInfo, setSwapInfo] = useState(null);
+  const [swouponCount, setSwouponCount] = useState(0);
 
   // API base URL - points to our local server
   const API_BASE_URL = 'http://localhost:5001/api';
 
   useEffect(() => {
-    // Fetch blockchain data when wallet is connect
+    // Check if redirected from swap with swap completion info
+    if (location.state?.swapCompleted) {
+      setSwapInfo(location.state);
+      // Increment swoupon count when swap is completed
+      setSwouponCount(prev => prev + location.state.swouponsEarned);
+    }
+    
+    // Fetch blockchain data when wallet is connected
     if (isConnected && walletAddress) {
       fetchWalletData();
     }
-  }, [isConnected, walletAddress]);
+  }, [isConnected, walletAddress, location.state]);
 
   const fetchWalletData = async () => {
     if (!walletAddress) return;
@@ -69,13 +80,78 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
     <div className="dashboard-page">
       <h1 className="bg-clip-text text-transparent bg-uniswap-gradient mb-8">Your Dashboard</h1>
       
+      {/* Show swap success message if redirected from swap */}
+      {swapInfo && (
+        <div className="card border-green-500 bg-green-50 dark:bg-green-900/20 mb-6 animate-fadeIn">
+          <div className="flex items-start">
+            <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3 flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div>
+              <p className="font-medium text-green-600 dark:text-green-400 mb-2">Swap Successful!</p>
+              <p className="mb-2">You swapped {swapInfo.amount} {swapInfo.fromToken} to {(parseFloat(swapInfo.amount) * 10).toFixed(2)} {swapInfo.toToken}</p>
+              <p className="text-uniswap-pink font-medium">
+                <span className="inline-flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="6" />
+                    <circle cx="12" cy="12" r="2" />
+                  </svg>
+                  +{swapInfo.swouponsEarned} Swoupon earned!
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Swoupon Count Display */}
+      <div className="card wallet-overview mb-6">
+        <div className="flex items-center mb-4">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-uniswap-pink to-purple-600 flex items-center justify-center mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="6" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
+          </div>
+          <h2 className="m-0">Your Swoupons</h2>
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <span className="text-4xl font-bold text-uniswap-pink">{swouponCount}</span>
+            <span className="ml-2 text-gray-500 dark:text-gray-400">/ 10 needed for free transaction</span>
+          </div>
+          
+          <button 
+            className={`btn btn-sm ${swouponCount >= 10 ? 'btn-gradient' : 'btn-disabled'}`}
+            disabled={swouponCount < 10}
+          >
+            Redeem
+          </button>
+        </div>
+        
+        {/* Progress bar */}
+        <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full mt-4 overflow-hidden">
+          <div 
+            className="bg-gradient-to-r from-uniswap-pink to-purple-600 h-full rounded-full transition-all duration-500 ease-out" 
+            style={{ width: `${(swouponCount / 10) * 100}%` }}
+          ></div>
+        </div>
+      </div>
+      
       <div className="card wallet-overview">
         <div className="flex items-center mb-4">
           <div className="w-10 h-10 rounded-full bg-uniswap-blue bg-opacity-10 flex items-center justify-center mr-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4C82FB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
-              <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
-              <path d="M18 12H9"></path>
+              <path d="M3 12a9 9 0 0 1 15-6.7l3-3"></path>
+              <path d="M3 12a9 9 0 0 0 15 6.7l3 3"></path>
+              <path d="M21 22v-6h-6"></path>
             </svg>
           </div>
           <h2 className="m-0">Wallet Overview</h2>

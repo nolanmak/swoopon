@@ -84,7 +84,11 @@ function App() {
       />
       <main className="container">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home 
+            isConnected={isConnected} 
+            walletAddress={walletAddress} 
+            connectWallet={connectWallet} 
+          />} />
           <Route 
             path="/dashboard" 
             element={

@@ -1,0 +1,179 @@
+.swap-container {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.swap-header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.swap-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.swap-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.swap-input-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.swap-input-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.swap-balance {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.swap-input-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.swap-input {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  width: 60%;
+  color: white;
+  outline: none;
+}
+
+.swap-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.swap-token-selector {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 16px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+}
+
+.swap-token-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.swap-switch-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 8px auto;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.swap-switch-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: rotate(180deg);
+}
+
+.swap-rate {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 8px 0 16px;
+}
+
+.swap-error {
+  background-color: rgba(255, 87, 87, 0.2);
+  border: 1px solid rgba(255, 87, 87, 0.5);
+  border-radius: 8px;
+  padding: 10px;
+  color: #ff5757;
+  margin-bottom: 16px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.swap-button {
+  width: 100%;
+  background: linear-gradient(to right, #FC72FF, #9B30FF);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.swap-button:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(252, 114, 255, 0.5);
+}
+
+.swap-button.disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.swap-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swap-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Dark mode enhancements */
+.dark .swap-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .swap-input-container,
+.dark .swap-token-selector,
+.dark .swap-switch-button {
+  background-color: rgba(0, 0, 0, 0.3);
+}

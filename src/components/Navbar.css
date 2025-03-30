@@ -1,11 +1,14 @@
 /* Navbar overlay - always floating on top */
 .navbar-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000; /* Extremely high z-index to ensure it's on top */
   pointer-events: none; /* Allow clicking through by default */
+  background-color: transparent;
+  padding: 1rem 0;
+  transition: all 0.3s ease;
 }
 
 .navbar-container {
@@ -125,4 +128,9 @@
   .navbar-right {
     gap: 1rem;
   }
+}
+
+
+.hide {
+  display: none;
 }

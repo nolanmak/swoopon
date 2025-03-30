@@ -1,206 +1,246 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Swap.css';
 
-const Swap = () => {
-  const [sellAmount, setSellAmount] = useState('');
-  const [buyAmount, setBuyAmount] = useState('');
-  const [isFlipped, setIsFlipped] = useState(false);
-  
-  const handleToggle = () => {
-    setIsFlipped(!isFlipped);
+const Swap = ({ isDarkMode, walletAddress }) => {
+  const [fromToken, setFromToken] = useState('ETH');
+  const [toToken, setToToken] = useState('WBTC');
+  const [amount, setAmount] = useState('');
+  const [isSwapping, setIsSwapping] = useState(false);
+  const [error, setError] = useState('');
+  const [rate, setRate] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [balances, setBalances] = useState({
+    ETH: '0.0',
+    WBTC: '0.0'
+  });
+  const navigate = useNavigate();
+
+  // Mock wallet address for testing - in a real app, this would come from props or context
+  const userWallet = walletAddress;
+  console.log(userWallet)
+
+  // Fetch token balances from user's wallet
+  useEffect(() => {
+    const fetchBalances = async () => {
+      try {
+        // Fetch ETH balance
+        const ethResponse = await fetch(`/api/balance/${userWallet}`);
+        if (!ethResponse.ok) {
+          throw new Error('Failed to fetch ETH balance');
+        }
+        const ethData = await ethResponse.json();
+        console.log(ethData);
+        
+        // Fetch token balances
+        const tokensResponse = await fetch(`/api/tokens/${userWallet}`);
+        if (!tokensResponse.ok) {
+          throw new Error('Failed to fetch token balances');
+        }
+        const tokensData = await tokensResponse.json();
+        
+        // Find WBTC in token list
+        const wbtcToken = tokensData.tokens?.find(token => 
+          token.symbol?.toLowerCase() === 'wbtc' || 
+          token.name?.toLowerCase().includes('bitcoin')
+        );
+        
+        const wbtcBalance = wbtcToken 
+          ? (parseFloat(wbtcToken.balance) / Math.pow(10, wbtcToken.decimals)).toFixed(8)
+          : '0.0';
+        
+        setBalances({
+          ETH: ethData.balance || '0.0',
+          WBTC: wbtcBalance
+        });
+      } catch (error) {
+        console.error('Error fetching balances:', error);
+        // Keep existing balances or set fallbacks
+      }
+    };
+
+    fetchBalances();
+  }, [userWallet]);
+
+  // Fetch exchange rate on component mount or when tokens change
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/exchange-rate?fromToken=${fromToken}&toToken=${toToken}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch exchange rate');
+        }
+        const data = await response.json();
+        setRate(data.rate);
+      } catch (error) {
+        console.error('Error fetching exchange rate:', error);
+        setError('Failed to fetch exchange rate. Using fallback values.');
+        // Fallback rate (roughly ETH to WBTC as of early 2025)
+        setRate(fromToken === 'ETH' ? 0.056 : 17.8);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchExchangeRate();
+  }, [fromToken, toToken]);
+
+  // Switch the from and to tokens
+  const handleSwitchTokens = () => {
+    setFromToken(toToken);
+    setToToken(fromToken);
   };
-  
+
+  // Handle the swap action - redirect to dashboard instead of actual swap
+  const handleSwap = async () => {
+    if (!amount || parseFloat(amount) <= 0) return;
+    
+    setIsSwapping(true);
+    setError('');
+    
+    try {
+      // Log the swap attempt to the server for analytics
+      const response = await fetch('/api/log-swap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fromToken,
+          toToken,
+          amount: parseFloat(amount),
+          userAddress: userWallet
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to log swap');
+      }
+      
+      const data = await response.json();
+      
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Redirect to dashboard after successful "swap"
+      navigate('/dashboard', { 
+        state: { 
+          swapCompleted: true,
+          fromToken,
+          toToken,
+          amount,
+          swouponsEarned: data.swouponsEarned || 1
+        } 
+      });
+      
+    } catch (error) {
+      console.error('Swap error:', error);
+      setError('Failed to process swap. Please try again.');
+      setIsSwapping(false);
+    }
+  };
+
+  // Calculate the estimated output amount
+  const calculateOutputAmount = () => {
+    if (!amount || !rate) return '';
+    return (parseFloat(amount) * rate).toFixed(8);
+  };
+
+  // Get the current balance for a token
+  const getBalance = (token) => {
+    return balances[token] || '0.0';
+  };
+
   return (
-    <div style={{
-      maxWidth: '600px',
-      width: '100%',
-      margin: '0 auto',
-      padding: '20px',
-      fontFamily: 'Inter, sans-serif'
-    }}>
-      {/* First Card (Sell/Buy depending on flip state) */}
-      <div style={{
-        backgroundColor: isFlipped ? '#f9f9f9' : 'white',
-        borderRadius: '20px',
-        padding: '20px',
-        marginBottom: '10px',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-      }}>
-        <div style={{ fontSize: '20px', color: '#666', marginBottom: '20px' }}>{isFlipped ? 'Buy' : 'Sell'}</div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <input
-            type="text"
-            value={isFlipped ? buyAmount : sellAmount}
-            onChange={(e) => isFlipped ? setBuyAmount(e.target.value) : setSellAmount(e.target.value)}
-            placeholder="0"
-            style={{
-              fontSize: '42px',
-              border: 'none',
-              outline: 'none',
-              width: '60%',
-              fontWeight: '500',
-              color: '#333'
-            }}
-          />
-          
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: isFlipped ? '#fc72ff' : '#f0f0f0',
-            color: isFlipped ? 'white' : 'inherit',
-            borderRadius: '16px',
-            padding: '8px 16px',
-            cursor: 'pointer'
-          }}>
-            {isFlipped ? null : (
-              <div style={{ 
-                width: '32px', 
-                height: '32px', 
-                borderRadius: '50%', 
-                backgroundColor: '#627EEA',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '8px'
-              }}>
-                <img 
-                  src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" 
-                  alt="ETH"
-                  style={{ width: '20px', height: '20px' }}
-                />
-              </div>
-            )}
-            <span style={{ fontWeight: '600', fontSize: '18px' }}>{isFlipped ? 'Select token' : 'ETH'}</span>
-            <span style={{ 
-              marginLeft: '8px',
-              width: '20px',
-              height: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              ▼
-            </span>
-          </div>
+    <div className="swap-container">
+      <div className="swap-header">
+        <h3 className="swap-title">Swap</h3>
+        <span className="swap-subtitle">Earn rewards with every swap</span>
+      </div>
+      
+      {/* From Token */}
+      <div className="swap-input-container">
+        <div className="swap-input-header">
+          <span>From</span>
+          <span className="swap-balance">Balance: {getBalance(fromToken)} {fromToken}</span>
         </div>
-        {!isFlipped && (
-          <div style={{ fontSize: '16px', color: '#888', marginTop: '10px' }}>
-            ${sellAmount ? Number(sellAmount) * 3000 : 0}
-          </div>
+        <div className="swap-input-group">
+          <input 
+            type="number" 
+            placeholder="0.0" 
+            value={amount} 
+            onChange={(e) => setAmount(e.target.value)}
+            className="swap-input"
+          />
+          <button className="swap-token-selector">
+            <img src={`/icons/${fromToken.toLowerCase()}.svg`} alt={fromToken} className="swap-token-icon" />
+            <span>{fromToken}</span>
+          </button>
+        </div>
+      </div>
+      
+      {/* Switch Button */}
+      <button className="swap-switch-button" onClick={handleSwitchTokens}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+      </button>
+      
+      {/* To Token */}
+      <div className="swap-input-container">
+        <div className="swap-input-header">
+          <span>To</span>
+          <span className="swap-balance">Balance: {getBalance(toToken)} {toToken}</span>
+        </div>
+        <div className="swap-input-group">
+          <input 
+            type="number" 
+            placeholder="0.0" 
+            value={isLoading ? 'Loading...' : calculateOutputAmount()} 
+            disabled 
+            className="swap-input"
+          />
+          <button className="swap-token-selector">
+            <img src={`/icons/${toToken.toLowerCase()}.svg`} alt={toToken} className="swap-token-icon" />
+            <span>{toToken}</span>
+          </button>
+        </div>
+      </div>
+      
+      {/* Swap rates */}
+      <div className="swap-rate">
+        {isLoading ? (
+          <span>Loading exchange rate...</span>
+        ) : (
+          <span>1 {fromToken} = {rate ? rate.toFixed(8) : '?'} {toToken}</span>
         )}
+        <span>Earn 1 Swoupon for this swap</span>
       </div>
       
-      {/* Arrow/Swap Icon */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        position: 'relative',
-        height: '40px'
-      }}>
-        <div 
-          onClick={handleToggle}
-          style={{
-            width: '40px',
-            height: '40px',
-            backgroundColor: '#f0f0f0',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: '2',
-            cursor: 'pointer',
-            transition: 'transform 0.3s ease'
-          }}
-        >
-          <span style={{ 
-            fontSize: '24px',
-            transform: isFlipped ? 'rotate(180deg)' : 'rotate(0deg)',
-            display: 'inline-block',
-            transition: 'transform 0.3s ease'
-          }}>↓</span>
-        </div>
-      </div>
-      
-      {/* Second Card (Buy/Sell depending on flip state) */}
-      <div style={{
-        backgroundColor: isFlipped ? 'white' : '#f9f9f9',
-        borderRadius: '20px',
-        padding: '20px',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)'
-      }}>
-        <div style={{ fontSize: '20px', color: '#666', marginBottom: '20px' }}>{isFlipped ? 'Sell' : 'Buy'}</div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <input
-            type="text"
-            value={isFlipped ? sellAmount : buyAmount}
-            onChange={(e) => isFlipped ? setSellAmount(e.target.value) : setBuyAmount(e.target.value)}
-            placeholder="0"
-            style={{
-              fontSize: '42px',
-              border: 'none',
-              outline: 'none',
-              width: '60%',
-              fontWeight: '500',
-              backgroundColor: 'transparent',
-              color: '#333'
-            }}
-          />
-          
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: isFlipped ? '#f0f0f0' : '#fc72ff',
-            color: isFlipped ? 'inherit' : 'white',
-            borderRadius: '16px',
-            padding: '8px 16px',
-            cursor: 'pointer'
-          }}>
-            {isFlipped && (
-              <div style={{ 
-                width: '32px', 
-                height: '32px', 
-                borderRadius: '50%', 
-                backgroundColor: '#627EEA',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '8px'
-              }}>
-                <img 
-                  src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" 
-                  alt="ETH"
-                  style={{ width: '20px', height: '20px' }}
-                />
-              </div>
-            )}
-            <span style={{ fontWeight: '600', fontSize: '18px' }}>{isFlipped ? 'ETH' : 'Select token'}</span>
-            <span style={{ 
-              marginLeft: '8px',
-              width: '20px',
-              height: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              ▼
-            </span>
-          </div>
-        </div>
-      </div>
-      
-      {/* Price indicator - appears at bottom after flipping */}
-      {isFlipped && (
-        <div style={{ fontSize: '16px', color: '#888', marginTop: '10px', padding: '0 20px' }}>
-          ${sellAmount ? Number(sellAmount) * 3000 : 0}
+      {/* Error message */}
+      {error && (
+        <div className="swap-error">
+          {error}
         </div>
       )}
+      
+      {/* Swap Button */}
+      <button 
+        className={`swap-button ${isSwapping ? 'swapping' : ''} ${!amount || parseFloat(amount) <= 0 || isLoading ? 'disabled' : ''}`}
+        onClick={handleSwap}
+        disabled={!amount || parseFloat(amount) <= 0 || isSwapping || isLoading}
+      >
+        {isSwapping ? (
+          <div className="swap-loading">
+            <div className="swap-spinner"></div>
+            <span>Swapping...</span>
+          </div>
+        ) : isLoading ? (
+          <span>Loading exchange rate...</span>
+        ) : (
+          <span>Swap</span>
+        )}
+      </button>
     </div>
   );
 };
