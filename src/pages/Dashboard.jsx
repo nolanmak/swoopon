@@ -544,7 +544,7 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
   };
 
   return (
-    <div className="dashboard-page relative" style = {{'overflow-y': 'hidden'}}>
+    <div className="dashboard-page relative min-h-screen overflow-hidden">
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0"> 
         <img
@@ -554,7 +554,8 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
         />
       </div>
       
-      <div className="relative z-10">
+      {/* Content overlay */}
+      <div className="relative z-10 min-h-screen">
         
         {/* Liquidity Pool Section */}
         <div style={styles.page}>
