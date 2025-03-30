@@ -42,8 +42,8 @@ const RoadmapTimeline = () => {
   ];
 
   return (
-    <div className="pt-16 pb-0 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto py-12 px-48">
+    <div className="py-8 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto px-48">
         <div 
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.1)',

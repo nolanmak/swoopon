@@ -160,8 +160,20 @@ a:hover {
   padding-bottom: 0;
 }
 
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .pt-16 {
-  padding-top: 16px;
+  padding-top: 4rem;
+}
+
+.pb-8 {
+  padding-bottom: 2rem;
 }
 
 .mx-auto {
@@ -420,6 +432,10 @@ a:hover {
 
 .gap-12 {
   gap: 3rem;
+}
+
+.p-12 {
+  padding: 3rem;
 }
 
 .items-center {

@@ -70,8 +70,6 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
           <div className="navbar-left gap-6">
             <Link to="/" className="navbar-link">Home</Link>
             <Link to="/dashboard" className="navbar-link">Dashboard</Link>
-          </div>
-          <div className="navbar-left hide">
             <button 
               onClick={toggleTheme}
               className="navbar-theme-toggle"

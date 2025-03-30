@@ -14,7 +14,7 @@ const RedemptionChart = ({ isDarkMode }) => {
   
   return (
     <div className="relative py-8 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto py-12 px-48">
+      <div className="max-w-7xl mx-auto pt-12 pb-0 px-48">
         <div 
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -30,7 +30,11 @@ const RedemptionChart = ({ isDarkMode }) => {
               <div className="flex flex-col items-center">
                 {/* Chart Canvas - Remove shadow and add class for transparent background */}
                 <div className="w-full bg-transparent dark:bg-transparent p-6 rounded-lg">
-                  <div className="chart-container">
+                  <div 
+                  className="w-full rounded-lg"
+                  style={{
+                    height: "375px"
+                  }}>
                     <Line 
                       data={{
                         labels: generateLabels(),
@@ -65,7 +69,6 @@ const RedemptionChart = ({ isDarkMode }) => {
                               2163.95731643, 2180.41945536, 2196.78719312, 2213.06131943
                             ],
                             borderColor: '#FC72FF',
-                            backgroundColor: 'rgba(255, 255, 255, 0)',
                             tension: 0.4,
                             fill: true,
                             pointRadius: 0, // Remove dots

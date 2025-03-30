@@ -10,7 +10,7 @@ const PunchCardConcept = () => {
   };
 
   return (
-    <div className="relative py-8 dark:bg-gray-900">
+    <div className="relative pt-16 pb-8 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center px-12">
           {/* Image Side */}
