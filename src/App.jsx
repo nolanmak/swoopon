@@ -93,7 +93,7 @@ function App() {
             connectWallet={connectWallet} 
           />} />
           <Route 
-            path="/dashboard" 
+            path="/swap" 
             element={
               <Dashboard 
                 isConnected={isConnected} 

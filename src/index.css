@@ -180,13 +180,6 @@ a:hover {
   margin: 0 auto;
 }
 
-/* Dashboard */
-.dashboard-page {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
 .wallet-overview {
   margin-bottom: 2rem;
 }

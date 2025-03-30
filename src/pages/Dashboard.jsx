@@ -2,6 +2,30 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import FloatingTokens from '../components/FloatingTokens';
+import Swap from '../components/Swap';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import './Dashboard.css';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
   const location = useLocation();
@@ -12,6 +36,26 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
   const [swapInfo, setSwapInfo] = useState(null);
   const [swouponCount, setSwouponCount] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  
+  // Liquidity Pool states
+  const [timeFrame, setTimeFrame] = useState('1D');
+  const [chartData, setChartData] = useState({
+    labels: generateTimeLabels(24),
+    datasets: [
+      {
+        label: 'Volume',
+        data: generateRandomData(24, 5, 25),
+        borderColor: '#FC72FF',
+        backgroundColor: 'rgba(252, 114, 255, 0.2)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 0,
+        borderWidth: 4,
+        pointHoverRadius: 0,
+      },
+    ],
+  });
 
   // API base URL - points to our local server
   const API_BASE_URL = 'http://localhost:5001/api';
@@ -56,6 +100,15 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
     
     return () => observer.disconnect();
   }, []);
+  
+  // Preload the background image
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/landscape.png';
+    img.onload = () => {
+      setImageLoaded(true);
+    };
+  }, []);
 
   const fetchWalletData = async () => {
     if (!walletAddress) return;
@@ -80,11 +133,181 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
       setIsLoading(false);
     }
   };
+  
+  // Generate time labels for chart
+  function generateTimeLabels(count) {
+    const labels = [];
+    const now = new Date();
+    now.setMinutes(0, 0, 0); // Round to current hour
+    
+    for (let i = 0; i < count; i++) {
+      const time = new Date(now);
+      time.setHours(time.getHours() - (count - i - 1));
+      
+      // Format time as "11:52 PM", "2:52 AM", etc.
+      labels.push(time.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      }));
+    }
+    
+    return labels;
+  }
+
+  // Generate random data for chart
+  function generateRandomData(count, min, max) {
+    return Array.from({ length: count }, () => 
+      Math.floor(Math.random() * (max - min + 1)) + min
+    );
+  }
+  
+  // Generate date labels for chart (for timeframes other than 1D)
+  function generateDateLabels(count, timeFrame) {
+    const labels = [];
+    const now = new Date();
+    
+    let format;
+    let step;
+    
+    if (timeFrame === '1W') {
+      format = { weekday: 'short' };
+      step = 1; // days
+    } else if (timeFrame === '1M') {
+      format = { month: 'short', day: 'numeric' };
+      step = 1; // days
+    } else if (timeFrame === '1Y') {
+      format = { month: 'short' };
+      step = 1; // months
+    } else { // 1H
+      return generateTimeLabels(count);
+    }
+    
+    for (let i = 0; i < count; i++) {
+      const date = new Date(now);
+      
+      if (timeFrame === '1Y') {
+        date.setMonth(date.getMonth() - (count - i - 1));
+      } else {
+        date.setDate(date.getDate() - (count - i - 1));
+      }
+      
+      labels.push(date.toLocaleDateString('en-US', format));
+    }
+    
+    return labels;
+  }
+
+  // Chart options
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    backgroundColor: 'transparent',
+    animation: {
+      duration: 1000
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        titleColor: isDarkMode ? '#fff' : '#333',
+        bodyColor: isDarkMode ? '#fff' : '#333',
+        borderColor: '#FC72FF',
+        borderWidth: 1,
+        callbacks: {
+          label: function(context) {
+            return '$' + context.raw + 'M';
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Volume (in millions $)',
+          color: '#ffffff',
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+          drawOnChartArea: true,
+          drawTicks: true,
+        },
+        ticks: {
+          color: '#ffffff',
+          callback: function(value) {
+            return '$' + value + 'M';
+          }
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Time',
+          color: '#ffffff',
+        },
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: '#ffffff',
+          maxTicksLimit: 8, // Only show a subset of ticks for readability
+        }
+      }
+    }
+  };
+
+  // Handle timeframe change
+  const handleTimeFrameChange = (frame) => {
+    setTimeFrame(frame);
+    
+    let count;
+    switch(frame) {
+      case '1H':
+        count = 12;
+        break;
+      case '1W':
+        count = 7;
+        break;
+      case '1M':
+        count = 30;
+        break;
+      case '1Y':
+        count = 12;
+        break;
+      default: // 1D
+        count = 24;
+    }
+    
+    setChartData({
+      labels: frame === '1D' ? generateTimeLabels(count) : generateDateLabels(count, frame),
+      datasets: [
+        {
+          ...chartData.datasets[0],
+          data: generateRandomData(count, 5, 25),
+        },
+      ],
+    });
+  };
 
   // If wallet is not connected, show connect prompt
   if (!isConnected) {
     return (
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 z-0"> 
+          <img
+            src="/landscape.png"
+            alt="Dashboard Background"
+            className={`w-full h-full object-cover transition-opacity duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          />
+        </div>
+        
         {/* Floating Tokens Background */}
         <FloatingTokens isDarkMode={isDarkMode} />
         
@@ -110,199 +333,366 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
     );
   }
 
+  // Styles for liquidity pool section
+  const styles = {
+    page: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '5rem 1rem 1rem 1rem'
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '24px'
+    },
+    headerContent: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderRadius: '12px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      padding: '16px 24px 0px 24px',
+      display: 'inline-block',
+      color: '#ffffff'
+    },
+    headerTitle: {
+      marginLeft: '24px'
+    },
+    title: {
+      fontSize: '24px',
+      fontWeight: 'bold',
+      display: 'flex',
+      alignItems: 'center',
+      color: '#ffffff'
+    },
+    versionTag: {
+      fontSize: '12px',
+      backgroundColor: isDarkMode ?'#F5F5F5' : '#333',
+      padding: '2px 8px',
+      borderRadius: '4px',
+      marginLeft: '8px'
+    },
+    feeTag: {
+      fontSize: '12px',
+      color: '#666',
+      marginLeft: '8px'
+    },
+    iconButton: {
+      marginLeft: '16px',
+      color: '#666',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer'
+    },
+    mainContent: {
+      display: 'grid',
+      gridTemplateColumns: '2fr 1fr',
+      gap: '24px'
+    },
+    chartContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(5px)',
+      borderRadius: '12px',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      padding: '24px',
+      color: '#ffffff'
+    },
+    volumeHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '24px',
+      color: '#ffffff'
+    },
+    volumeValue: {
+      fontSize: '30px',
+      fontWeight: 'bold',
+      margin: 0,
+      color: '#ffffff'
+    },
+    volumeLabel: {
+      fontSize: '14px',
+      color: 'rgba(255, 255, 255, 0.8)',
+      margin: 0
+    },
+    timeFrameButtons: {
+      display: 'flex',
+      gap: '4px'
+    },
+    timeFrameButton: {
+      padding: '4px 12px',
+      borderRadius: '6px',
+      fontSize: '14px',
+      border: 'none',
+      cursor: 'pointer',
+      background: 'none',
+      color: 'rgba(255, 255, 255, 0.7)'
+    },
+    activeTimeFrameButton: {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      fontWeight: '500',
+      color: '#ffffff'
+    },
+    chartWrapper: {
+      height: '400px'
+    },
+    timeMarkers: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: '12px',
+      color: '#666',
+      marginTop: '8px'
+    },
+    timeMarkersRight: {
+      display: 'flex',
+      gap: '32px'
+    },
+    volumeSelector: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: '16px',
+      paddingTop: '16px',
+      borderTop: '1px solid #EEEEEE'
+    },
+    volumeSelectorButtons: {
+      display: 'flex',
+      gap: '16px'
+    },
+    smallButton: {
+      fontSize: '12px',
+      padding: '4px 8px',
+      borderRadius: '4px',
+      border: 'none',
+      cursor: 'pointer'
+    },
+    activeSmallButton: {
+      backgroundColor: '#F0F0F0'
+    },
+    dropdownSelector: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    dropdownLabel: {
+      fontSize: '14px',
+      marginRight: '8px'
+    },
+    statsContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      color: '#ffffff',
+      borderRadius: '12px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      padding: '24px'
+    },
+    statsTitle: {
+      fontSize: '20px',
+      fontWeight: 'bold',
+      marginBottom: '24px',
+      color: '#ffffff'
+    },
+    statLabel: {
+      fontSize: '14px',
+      color: 'rgba(255, 255, 255, 0.8)',
+      marginBottom: '8px'
+    },
+    poolBalances: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      color: '#ffffff'
+    },
+    balanceRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    progressBar: {
+      height: '8px',
+      backgroundColor: '#4C82FB',
+      borderRadius: '4px'
+    },
+    statValue: {
+      fontSize: '24px',
+      fontWeight: 'bold',
+      display: 'flex',
+      alignItems: 'center'
+    },
+    percentageUp: {
+      marginLeft: '8px',
+      fontSize: '14px',
+      color: '#22C55E'
+    },
+    percentageDown: {
+      marginLeft: '8px',
+      fontSize: '14px',
+      color: '#EF4444'
+    },
+    walletBalanceSection: {
+      marginBottom: '24px',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+      paddingBottom: '20px',
+      backgroundColor: 'transparent',
+      backdropFilter: 'none'
+    },
+    walletAddressText: {
+      fontSize: '14px',
+      color: '#666',
+      wordBreak: 'break-all'
+    }
+  };
+
   return (
-    <div className="dashboard-page relative">
-      {/* Floating Tokens Background */}
-      <FloatingTokens isDarkMode={isDarkMode} />
+    <div className="dashboard-page relative" style = {{'overflow-y': 'hidden'}}>
+      {/* Background Image Container */}
+      <div className="absolute inset-0 z-0"> 
+        <img
+          src="/landscape.png"
+          alt="Dashboard Background"
+          className={`w-full h-full object-cover transition-opacity duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+        />
+      </div>
       
       <div className="relative z-10">
-        <h1 className="bg-clip-text text-transparent bg-uniswap-gradient mb-8">Your Dashboard</h1>
         
-        {/* Show swap success message if redirected from swap */}
-        {swapInfo && (
-          <div className="card border-green-500 bg-green-50 dark:bg-green-900/20 mb-6 animate-fadeIn">
-            <div className="flex items-start">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3 flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-              </div>
-              <div>
-                <p className="font-medium text-green-600 dark:text-green-400 mb-2">Swap Successful!</p>
-                <p className="mb-2">You swapped {swapInfo.amount} {swapInfo.fromToken} to {(parseFloat(swapInfo.amount) * 10).toFixed(2)} {swapInfo.toToken}</p>
-                <p className="text-uniswap-pink font-medium">
-                  <span className="inline-flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                      <circle cx="12" cy="12" r="10" />
-                      <circle cx="12" cy="12" r="6" />
-                      <circle cx="12" cy="12" r="2" />
-                    </svg>
-                    +{swapInfo.swouponsEarned} Swoupon earned!
-                  </span>
-                </p>
+        {/* Liquidity Pool Section */}
+        <div style={styles.page}>
+          {/* Pool Header */}
+          <div style={styles.header}>
+            <div style={styles.headerContent}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={styles.headerTitle}>
+                  <h1 style={styles.title}>
+                    WBTC / ETH
+                    <span style={styles.versionTag}>v4</span>
+                    <span style={styles.feeTag}>0.05%</span>
+                  </h1>
+                </div>
               </div>
             </div>
           </div>
-        )}
-        
-        {/* Swoupon Count Display */}
-        <div className="card wallet-overview mb-6">
-          <div className="flex items-center mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-uniswap-pink to-purple-600 flex items-center justify-center mr-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="12" r="6" />
-                <circle cx="12" cy="12" r="2" />
-              </svg>
-            </div>
-            <h2 className="m-0">Your Swoupons</h2>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <span className="text-4xl font-bold text-uniswap-pink">{swouponCount}</span>
-              <span className="ml-2 text-gray-500 dark:text-gray-400">/ 10 needed for free transaction</span>
+
+          {/* Main Content - Chart and Stats */}
+          <div id="mainContent" style={styles.mainContent}>
+            {/* Left Column - Chart */}
+            <div>
+              <div style={styles.chartContainer} className="bg-transparent">
+                {/* Volume Header */}
+                <div style={styles.volumeHeader}>
+                  <div>
+                    <h2 style={styles.volumeValue}>$182.47M</h2>
+                    <p style={styles.volumeLabel}>Past day</p>
+                  </div>
+                  <div style={styles.timeFrameButtons}>
+                    <button 
+                      style={{
+                        ...styles.timeFrameButton,
+                        ...(timeFrame === '1H' ? styles.activeTimeFrameButton : {})
+                      }}
+                      onClick={() => handleTimeFrameChange('1H')}
+                    >
+                      1H
+                    </button>
+                    <button 
+                      style={{
+                        ...styles.timeFrameButton,
+                        ...(timeFrame === '1D' ? styles.activeTimeFrameButton : {})
+                      }}
+                      onClick={() => handleTimeFrameChange('1D')}
+                    >
+                      1D
+                    </button>
+                    <button 
+                      style={{
+                        ...styles.timeFrameButton,
+                        ...(timeFrame === '1W' ? styles.activeTimeFrameButton : {})
+                      }}
+                      onClick={() => handleTimeFrameChange('1W')}
+                    >
+                      1W
+                    </button>
+                    <button 
+                      style={{
+                        ...styles.timeFrameButton,
+                        ...(timeFrame === '1M' ? styles.activeTimeFrameButton : {})
+                      }}
+                      onClick={() => handleTimeFrameChange('1M')}
+                    >
+                      1M
+                    </button>
+                    <button 
+                      style={{
+                        ...styles.timeFrameButton,
+                        ...(timeFrame === '1Y' ? styles.activeTimeFrameButton : {})
+                      }}
+                      onClick={() => handleTimeFrameChange('1Y')}
+                    >
+                      1Y
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Chart */}
+                <div style={styles.chartWrapper} className="w-full rounded-lg">
+                  <Line data={chartData} options={chartOptions} />
+                </div>
+              </div>
             </div>
             
-            <button 
-              className={`btn btn-sm ${swouponCount >= 10 ? 'btn-gradient' : 'btn-disabled'}`}
-              disabled={swouponCount < 10}
-            >
-              Redeem
-            </button>
-          </div>
-          
-          {/* Progress bar */}
-          <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full mt-4 overflow-hidden">
-            <div 
-              className="bg-gradient-to-r from-uniswap-pink to-purple-600 h-full rounded-full transition-all duration-500 ease-out" 
-              style={{ width: `${(swouponCount / 10) * 100}%` }}
-            ></div>
-          </div>
-        </div>
-        
-        <div className="card wallet-overview">
-          <div className="flex items-center mb-4">
-            <div className="w-10 h-10 rounded-full bg-uniswap-blue bg-opacity-10 flex items-center justify-center mr-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4C82FB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
-                <path d="M3 12a9 9 0 0 1 15-6.7l3-3"></path>
-                <path d="M3 12a9 9 0 0 0 15 6.7l3 3"></path>
-                <path d="M21 22v-6h-6"></path>
-              </svg>
-            </div>
-            <h2 className="m-0">Wallet Overview</h2>
-          </div>
-          <p className="wallet-address-full">Address: {walletAddress}</p>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-uniswap-pink"></div>
-            </div>
-          ) : (
-            <div className="mt-4">
-              <div>
-                <h3 className="m-0">Native Balance</h3>
-                <div className="flex items-center">
-                  <div className="flex items-center">
-                    <span className="text-2xl font-bold mr-2">ETH</span>
-                    <span className="text-2xl font-bold text-uniswap-pink">{nativeBalance}</span>
+            {/* Right Column - Wallet Balance and Stats */}
+            <div style={styles.statsContainer}>
+              {/* Swap Component */}
+              <div style={styles.walletBalanceSection}>
+                <Swap 
+                  isConnected={isConnected}
+                  walletAddress={walletAddress}
+                  connectWallet={connectWallet}
+                  embedded={true}
+                />
+              </div>
+              
+              {/* Pool Balances */}
+              <div style={styles.statSection}>
+                <h3 style={styles.statLabel}>Pool balances</h3>
+                <div style={styles.poolBalances}>
+                  <div style={styles.balanceRow}>
+                    <span>15K WBTC</span>
+                    <div style={{ ...styles.progressBar, width: '96px' }}></div>
+                  </div>
+                  <div style={styles.balanceRow}>
+                    <span>86.3K ETH</span>
+                    <div style={{ ...styles.progressBar, width: '128px' }}></div>
                   </div>
                 </div>
               </div>
+              
+              {/* TVL */}
+              {/* <div style={styles.statSection}>
+                <h3 style={styles.statLabel}>TVL</h3>
+                <div style={styles.statValue}>
+                  <span>$144.3M</span>
+                  <span style={styles.percentageDown}>▼ 0.87%</span>
+                </div>
+              </div> */}
+              
+              {/* 24H Volume */}
+              {/* <div style={styles.statSection}>
+                <h3 style={styles.statLabel}>24H volume</h3>
+                <div style={styles.statValue}>
+                  <span>$182.5M</span>
+                  <span style={styles.percentageUp}>▲ 50.34%</span>
+                </div>
+              </div> */}
+              
+              {/* 24H Fees */}
+              {/* <div style={styles.statSection}>
+                <h3 style={styles.statLabel}>24H fees</h3>
+                <span style={{ fontSize: '24px', fontWeight: 'bold' }}>$91.2K</span>
+              </div> */}
             </div>
-          )}
+          </div>
         </div>
-        
-
-        
-        <div className="mb-8">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-uniswap-pink"></div>
-            </div>
-          ) : error ? (
-            <div className="card border-uniswap-red bg-red-50 dark:bg-red-900/20 mb-6">
-              <div className="flex items-start">
-                <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-3 flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5E69" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-medium text-uniswap-red mb-2">{error}</p>
-                  <p className="mb-2 text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary">Make sure to:</p>
-                  <ul className="list-disc pl-5 text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary">
-                    <li>Start the server with <code className="bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 rounded text-sm">node server.js</code></li>
-                    <li>Set your Moralis API key in server.js</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex items-center mb-4">
-                <div className="w-8 h-8 rounded-full bg-uniswap-blue bg-opacity-10 flex items-center justify-center mr-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C82FB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M12 6v6l4 2"></path>
-                  </svg>
-                </div>
-                <h2 className="m-0">Your Tokens</h2>
-              </div>
-              {tokenBalances.length > 0 ? (
-                <div className="space-y-3">
-                  {tokenBalances.map((token, index) => (
-                    <div key={index} className="token-card">
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-3">
-                          <span className="text-xs font-bold">{token.symbol?.charAt(0) || '?'}</span>
-                        </div>
-                        <div>
-                          <h3 className="text-base font-semibold m-0">{token.name || 'Unknown Token'}</h3>
-                          <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary text-sm">{token.symbol}</p>
-                        </div>
-                      </div>
-                      <div className="font-bold text-lg">
-                        {(token.balance / (10 ** token.decimals)).toFixed(6)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="card text-center py-12">
-                  <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary">No token balances found.</p>
-                </div>
-              )}
-            </div>
-
-          )}
-        </div>
-        
-        <button 
-          className="btn btn-gradient flex items-center justify-center"
-          onClick={fetchWalletData}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-              Loading...
-            </>
-          ) : (
-            <>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                <path d="M21 2v6h-6"></path>
-                <path d="M3 12a9 9 0 0 1 15-6.7l3-3"></path>
-                <path d="M3 12a9 9 0 0 0 15 6.7l3 3"></path>
-                <path d="M21 22v-6h-6"></path>
-              </svg>
-              Refresh Data
-            </>
-          )}
-        </button>
       </div>
     </div>
   );

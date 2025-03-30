@@ -177,3 +177,71 @@
 .dark .swap-switch-button {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+/* Embedded Swap styles for when used in Dashboard */
+.swap-embedded {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.swap-embedded .swap-input-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.swap-embedded .swap-input {
+  background-color: transparent;
+}
+
+.swap-embedded .swap-token-selector {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.swap-embedded .swap-switch-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.swap-embedded .swap-button {
+  background: var(--gradient);
+  border: none;
+}
+
+.dark .swap-embedded .swap-input-container {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .swap-embedded .swap-token-selector {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .swap-embedded .swap-switch-button {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Keep some elements with specific colors in both modes */
+.swap-embedded .swap-error {
+  color: #ff4d4d !important;
+}
+
+.swap-embedded svg {
+  color: inherit;
+}
+
+/* Responsive adjustments for embedded swap */
+@media (max-width: 768px) {
+  .swap-embedded {
+    max-width: 100%;
+  }
+}

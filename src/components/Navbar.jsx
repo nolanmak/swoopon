@@ -9,7 +9,7 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
   const location = useLocation();
   
   // Check if current page is dashboard
-  const isDashboardPage = location.pathname === '/dashboard';
+  const isDashboardPage = false
 
   // Function to truncate wallet address for display
   const truncateAddress = (address) => {
@@ -81,7 +81,7 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
           {/* Left side with theme toggle */}
           <div className="navbar-left gap-6">
             <Link to="/" className="navbar-link" style={navLinkStyle}>Home</Link>
-            <Link to="/dashboard" className="navbar-link" style={navLinkStyle}>Dashboard</Link>
+            <Link to="/swap" className="navbar-link" style={navLinkStyle}>Swap</Link>
             <button 
               onClick={toggleTheme}
               className="navbar-theme-toggle"

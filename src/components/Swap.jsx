@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Swap.css';
 
-const Swap = ({ isDarkMode, walletAddress }) => {
+const Swap = ({ isDarkMode, walletAddress, isConnected, connectWallet, embedded = false }) => {
   const [fromToken, setFromToken] = useState('ETH');
   const [toToken, setToToken] = useState('WBTC');
   const [amount, setAmount] = useState('');
@@ -151,11 +151,13 @@ const Swap = ({ isDarkMode, walletAddress }) => {
   };
 
   return (
-    <div className="swap-container">
-      <div className="swap-header">
-        <h3 className="swap-title">Swap</h3>
-        <span className="swap-subtitle">Earn rewards with every swap</span>
-      </div>
+    <div className={`swap-container ${embedded ? 'swap-embedded' : ''}`}>
+      {!embedded && (
+        <div className="swap-header">
+          <h3 className="swap-title">Swap</h3>
+          <span className="swap-subtitle">Earn rewards with every swap</span>
+        </div>
+      )}
       
       {/* From Token */}
       <div className="swap-input-container">

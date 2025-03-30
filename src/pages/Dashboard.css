@@ -1,11 +1,4 @@
-.dashboard-page {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
 .dashboard-page h1 {
-  margin-bottom: 2rem;
   color: var(--primary-color);
 }
 

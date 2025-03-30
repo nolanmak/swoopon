@@ -176,7 +176,7 @@ const LiquidityPool = ({ isConnected, walletAddress }) => {
     page: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '32px 16px'
+      padding: '80px 16px'
     },
     header: {
       display: 'flex',
@@ -405,13 +405,10 @@ const LiquidityPool = ({ isConnected, walletAddress }) => {
             <div style={{ ...styles.tokenIcon, ...styles.usdcIcon }}>
               <span>$</span>
             </div>
-            <div style={{ ...styles.tokenIcon, ...styles.ethIcon }}>
-              <span>Ξ</span>
-            </div>
           </div>
           <div style={styles.headerTitle}>
             <h1 style={styles.title}>
-              USDC / ETH
+              WBTC / ETH
               <span style={styles.versionTag}>v3</span>
               <span style={styles.feeTag}>0.05%</span>
               <button style={styles.iconButton}>
@@ -540,7 +537,7 @@ const LiquidityPool = ({ isConnected, walletAddress }) => {
             <h3 style={styles.statLabel}>Pool balances</h3>
             <div style={styles.poolBalances}>
               <div style={styles.balanceRow}>
-                <span>22.5M USDC</span>
+                <span>15K WBTC</span>
                 <div style={{ ...styles.progressBar, width: '96px' }}></div>
               </div>
               <div style={styles.balanceRow}>
