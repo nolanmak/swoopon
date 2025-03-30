@@ -19,12 +19,12 @@ const BenefitsSection = () => {
             border: '1px solid rgba(255, 255, 255, 0.2)',
             color: 'var(--text-color)',
             width: 'fit-content',
-          }} className="px-24 py-12 flex flex-col items-center rounded-lg shadow-lg">
+          }} className="px-48 py-12 flex flex-col items-center rounded-lg shadow-lg">
         
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-8 bg-gradient text-transparent bg-clip-text">Why swap with us?</h2>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-2xl">
+        <div className="grid md:grid-cols-3 gap-8 max-w-2xl">
           {/* Dynamic Fees */}
           <div className=" dark:bg-gray-800 p-6 rounded-lg transition-all">
             <div 
@@ -62,9 +62,8 @@ const BenefitsSection = () => {
               Redeem Swoupons for zero-fee transactions
             </p>
           </div>
-        </div>
 
-        {/* Community Section - Replacing Security */}
+          {/* Community Section - Replacing Security */}
         <div className=" dark:bg-gray-800 p-6 rounded-lg transition-all">
             <div 
               className="flex items-center justify-center mb-5 mx-auto bg-gradient"
@@ -82,6 +81,7 @@ const BenefitsSection = () => {
               Governed by an active user community
             </p>
           </div>
+        </div>
         
         <div className="mt-18 text-center">
           <button 

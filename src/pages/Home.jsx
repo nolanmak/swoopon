@@ -18,6 +18,7 @@ import PunchCardConcept from '../components/PunchCardConcept';
 import RedemptionChart from '../components/RedemptionChart';
 import RewardsGrowthChart from '../components/RewardsGrowthChart';
 import BenefitsSection from '../components/BenefitsSection';
+import RoadmapTimeline from '../components/RoadmapTimeline';
 import Footer from '../components/Footer';
 
 // Register Chart.js components
@@ -89,6 +90,9 @@ const Home = ({ isConnected, walletAddress, connectWallet }) => {
           
           {/* Benefits Section */}
           <BenefitsSection />
+          
+          {/* Roadmap Timeline Section */}
+          <RoadmapTimeline />
           
           {/* Footer */}
           <Footer />
