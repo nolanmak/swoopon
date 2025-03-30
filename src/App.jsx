@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
+  const location = useLocation();
 
   // Check if wallet is already connected on component mount
   useEffect(() => {
@@ -82,6 +83,7 @@ function App() {
         isConnected={isConnected} 
         walletAddress={walletAddress} 
         connectWallet={connectWallet} 
+        currentPath={location.pathname}
       />
       <main className="container">
         <Routes>
