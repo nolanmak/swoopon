@@ -81,11 +81,7 @@ a:hover {
 /* Layout */
 .container {
   width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  overflow-x: hidden;
 }
 
 /* Components */
@@ -143,37 +139,12 @@ a:hover {
   background-color: var(--bg-color);
 }
 
-/* Navigation */
-.navbar {
-  background-color: var(--card-bg);
-  box-shadow: var(--shadow);
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-.navbar-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.navbar-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(to right, var(--uniswap-pink), var(--uniswap-purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 .navbar-menu {
   display: flex;
   gap: 1.5rem;
 }
 
 .navbar-link {
-  color: var(--text-secondary);
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -376,6 +347,11 @@ a:hover {
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.px-12 {
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
 .p-4 {
