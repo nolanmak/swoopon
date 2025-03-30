@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Navbar.css';
 
@@ -6,6 +6,10 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  // Check if current page is dashboard
+  const isDashboardPage = location.pathname === '/dashboard';
 
   // Function to truncate wallet address for display
   const truncateAddress = (address) => {
@@ -62,14 +66,22 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
   // Class for the mobile menu based on state
   const mobileMenuClasses = `navbar-mobile-menu ${isMenuOpen ? 'open' : ''}`;
 
+  // Define styles based on current page
+  const navLinkStyle = isDashboardPage ? { color: '#000000' } : {};
+  const walletCardStyle = isDashboardPage ? { 
+    color: '#000000',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderColor: 'rgba(0, 0, 0, 0.2)'
+  } : {};
+
   return (
     <nav className="navbar-main">
       <div className="navbar-overlay">
         <div className="navbar-container">
           {/* Left side with theme toggle */}
           <div className="navbar-left gap-6">
-            <Link to="/" className="navbar-link">Home</Link>
-            <Link to="/dashboard" className="navbar-link">Dashboard</Link>
+            <Link to="/" className="navbar-link" style={navLinkStyle}>Home</Link>
+            <Link to="/dashboard" className="navbar-link" style={navLinkStyle}>Dashboard</Link>
             <button 
               onClick={toggleTheme}
               className="navbar-theme-toggle"
@@ -99,7 +111,7 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
           <div className="navbar-right">
             
             {isConnected ? (
-              <div className="navbar-wallet-connected">
+              <div className="navbar-wallet-connected" style={walletCardStyle}>
                 <span>{truncateAddress(walletAddress)}</span>
               </div>
             ) : (
