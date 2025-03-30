@@ -10,10 +10,10 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
   const [error, setError] = useState(null);
 
   // API base URL - points to our local server
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = 'http://localhost:5001/api';
 
   useEffect(() => {
-    // Fetch blockchain data when wallet is connected
+    // Fetch blockchain data when wallet is connect
     if (isConnected && walletAddress) {
       fetchWalletData();
     }

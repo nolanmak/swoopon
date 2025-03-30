@@ -40,7 +40,7 @@ const Navbar = ({ isConnected, walletAddress, connectWallet }) => {
     <nav className="navbar">
       <div className="navbar-container container">
         <Link to="/" className="navbar-logo">
-          SwouponApp
+          <span className="bg-clip-text text-transparent bg-uniswap-gradient font-bold text-xl animate-pulse-slow">Swoopon</span>
         </Link>
         
         <div className="navbar-menu">
