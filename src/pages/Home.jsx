@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import Swap from '../components/Swap';
 import './Home.css';
 
 const Home = () => {
@@ -29,11 +30,54 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
   
+  const heroSectionRef = useRef(null);
+  const featuresSectionRef = useRef(null);
+  const ctaSectionRef = useRef(null);
+
+  useEffect(() => {
+    // Function to handle scroll animations
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      // Animate sections as they come into view
+      const animateSection = (ref, threshold = 0.2) => {
+        if (!ref.current) return;
+        
+        const rect = ref.current.getBoundingClientRect();
+        const isVisible = rect.top < windowHeight * (1 - threshold);
+        
+        if (isVisible) {
+          ref.current.classList.add('animate-in');
+        }
+      };
+      
+      animateSection(heroSectionRef);
+      animateSection(featuresSectionRef);
+      animateSection(ctaSectionRef);
+    };
+    
+    // Initial check
+    handleScroll();
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <div className="home-page container py-12">
-      {/* Hero Section */}
-      <div className="card text-center p-8 my-8">
-        <h1 className="bg-clip-text text-transparent bg-uniswap-gradient mb-6">Welcome to SwouponApp</h1>
+      {/* Swap Component at the top */}
+      <div className="w-full px-4 md:px-8 lg:px-16 py-8 md:py-12">
+        <Swap />
+      </div>
+      
+      {/* Hero Section - appears as you scroll */}
+      <div ref={heroSectionRef} className="card text-center p-8 md:p-12 my-16 opacity-0 transform translate-y-10 transition-all duration-700 ease-out">
+        <h1 className="bg-clip-text text-transparent bg-uniswap-gradient mb-6">Welcome to Swoopon</h1>
         <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary text-xl mb-8">
           A decentralized application powered by Moralis
         </p>
@@ -160,7 +204,7 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      <div className="py-12">
+      <div ref={featuresSectionRef} className="py-12 opacity-0 transform translate-y-10 transition-all duration-700 ease-out">
         <h2 className="text-center mb-12 text-uniswap-light-text dark:text-uniswap-dark-text">Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="card hover:-translate-y-2 transition-all duration-300 cursor-pointer">
@@ -201,7 +245,7 @@ const Home = () => {
       </div>
 
       {/* Call to Action */}
-      <div className="card p-8 text-center mt-8">
+      <div ref={ctaSectionRef} className="card p-8 text-center mt-16 opacity-0 transform translate-y-10 transition-all duration-700 ease-out">
         <h2 className="mb-4">Ready to explore your crypto assets?</h2>
         <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary mb-6">
           Connect your wallet and start exploring your tokens and NFTs today.
