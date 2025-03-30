@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Home.css';
-import Swap from '../components/Swap';
 
 const Home = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -34,8 +33,6 @@ const Home = () => {
     <div className="home-page container py-12">
       {/* Hero Section */}
       <div className="card text-center p-8 my-8">
-        {/* Add Swap component here */}
-        <Swap />
         
         <h1 className="bg-clip-text text-transparent bg-uniswap-gradient mb-6">Welcome to Swoopon</h1>
         <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary text-xl mb-8">
