@@ -4,9 +4,7 @@ import axios from 'axios';
 const Dashboard = ({ isConnected, walletAddress }) => {
   const [nativeBalance, setNativeBalance] = useState(null);
   const [tokenBalances, setTokenBalances] = useState([]);
-  const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('tokens');
   const [error, setError] = useState(null);
 
   // API base URL - points to our local server
@@ -35,10 +33,6 @@ const Dashboard = ({ isConnected, walletAddress }) => {
       // Set state with fetched data
       setNativeBalance(balanceResponse.data.balance);
       setTokenBalances(tokensResponse.data.tokens);
-      
-      // Fetch NFTs
-      const nftsResponse = await axios.get(`${API_BASE_URL}/nfts/${walletAddress}`);
-      setNfts(nftsResponse.data.nfts);
     } catch (error) {
       console.error("Error fetching wallet data:", error);
       setError("Failed to fetch blockchain data. Please make sure the server is running.");
@@ -90,12 +84,12 @@ const Dashboard = ({ isConnected, walletAddress }) => {
           </div>
         ) : (
           <div className="mt-4">
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-3">
-                <span className="text-sm font-bold">Ξ</span>
-              </div>
-              <div>
-                <h3 className="m-0">Native Balance</h3>
+            <div>
+              <h3 className="m-0">Native Balance</h3>
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-3">
+                  <span className="text-sm font-bold">Ξ</span>
+                </div>
                 <p className="text-2xl font-bold text-uniswap-pink">{nativeBalance} ETH</p>
               </div>
             </div>
@@ -103,20 +97,7 @@ const Dashboard = ({ isConnected, walletAddress }) => {
         )}
       </div>
       
-      <div className="dashboard-tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'tokens' ? 'active' : ''}`}
-          onClick={() => setActiveTab('tokens')}
-        >
-          Tokens
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'nfts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('nfts')}
-        >
-          NFTs
-        </button>
-      </div>
+
       
       <div className="mb-8">
         {isLoading ? (
@@ -143,7 +124,7 @@ const Dashboard = ({ isConnected, walletAddress }) => {
               </div>
             </div>
           </div>
-        ) : activeTab === 'tokens' ? (
+        ) : (
           <div>
             <div className="flex items-center mb-4">
               <div className="w-8 h-8 rounded-full bg-uniswap-blue bg-opacity-10 flex items-center justify-center mr-3">
@@ -152,7 +133,7 @@ const Dashboard = ({ isConnected, walletAddress }) => {
                   <path d="M12 6v6l4 2"></path>
                 </svg>
               </div>
-              <h2 className="m-0">Token Balances</h2>
+              <h2 className="m-0">Your Tokens</h2>
             </div>
             {tokenBalances.length > 0 ? (
               <div className="space-y-3">
@@ -179,52 +160,7 @@ const Dashboard = ({ isConnected, walletAddress }) => {
               </div>
             )}
           </div>
-        ) : (
-          <div>
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 rounded-full bg-uniswap-green bg-opacity-10 flex items-center justify-center mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1EC992" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <path d="M21 15l-5-5L5 21"></path>
-                </svg>
-              </div>
-              <h2 className="m-0">Your NFTs</h2>
-            </div>
-            {nfts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {nfts.map((nft, index) => (
-                  <div key={index} className="nft-card">
-                    {nft.metadata && nft.metadata.image ? (
-                      <div className="nft-image-container">
-                        <img 
-                          src={nft.metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')} 
-                          alt={nft.metadata.name || 'NFT'} 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="nft-image-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                          <path d="M21 15l-5-5L5 21"></path>
-                        </svg>
-                      </div>
-                    )}
-                    <div className="nft-info">
-                      <h3 className="font-semibold truncate">{nft.metadata?.name || `NFT #${nft.tokenId}`}</h3>
-                      <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary text-sm">{nft.name}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="card text-center py-12">
-                <p className="text-uniswap-light-text-secondary dark:text-uniswap-dark-text-secondary">No NFTs found.</p>
-              </div>
-            )}
-          </div>
+
         )}
       </div>
       
