@@ -204,10 +204,10 @@ const Dashboard = ({ isConnected, walletAddress, connectWallet }) => {
               <div>
                 <h3 className="m-0">Native Balance</h3>
                 <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mr-3">
-                    <span className="text-sm font-bold">Ξ</span>
+                  <div className="flex items-center">
+                    <span className="text-2xl font-bold mr-2">Ξ</span>
+                    <span className="text-2xl font-bold text-uniswap-pink">{nativeBalance} ETH</span>
                   </div>
-                  <p className="text-2xl font-bold text-uniswap-pink">{nativeBalance} ETH</p>
                 </div>
               </div>
             </div>
